@@ -23,6 +23,19 @@ struct command_stream {
   int num_commands;
 }
 
+struct command_node {
+	struct char_node *charRoot;
+	struct command_node *next;
+	struct command_node *previous;	
+}
+
+struct char_node {
+	char x;
+	struct char_node *next;
+	struct char_node *previous;
+}
+
+
 char* make_char_buffer (int (*get_next_byte) (void *), void *get_next_byte_argument) {
   size_t buffer_size = 1024;
   char* char_buffer = (char *) checked_malloc(buffer_size);   //initialize buffer, with size of 1024
@@ -49,6 +62,13 @@ make_command_stream (int (*get_next_byte) (void *),
   m_command_stream.index = stream_index;
   int command_index = 0;
   struct individual_command* curr_command;
+
+	struct command_node *root;
+ 	root = checked_malloc(sizeof(struct command_node));
+	root->next = 0;
+	root->previous = 0; 
+
+
   	while ((curr_byte = get_next_byte(get_next_byte_argument)) != EOF) 
   	{
   		if (curr_byte == '\n')
