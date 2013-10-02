@@ -17,6 +17,11 @@ struct command_stream {
   int num_commands;
 }
 
+struct individual_command {
+  int index;
+  int size;
+}
+
 char* make_char_buffer (int (*get_next_byte) (void *), void *get_next_byte_argument) {
   size_t buffer_size = 1024;
   char* char_buffer = (char *) checked_malloc(buffer_size);   //initialize buffer, with size of 1024
@@ -39,12 +44,12 @@ make_command_stream (int (*get_next_byte) (void *),
 {
 	char curr_byte;
   	while ((curr_byte = get_next_byte(get_next_byte_argument)) != EOF) 
-	{
-		if (curr_byte == '\n')
-		{
-			 
-		}
-	}
+  	{
+  		if (curr_byte == '\n')
+  		{
+  			 
+  		}
+  	}
 
 
   //error (1, 0, "command reading not yet implemented");
