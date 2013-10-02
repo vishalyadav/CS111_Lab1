@@ -37,8 +37,17 @@ command_stream_t
 make_command_stream (int (*get_next_byte) (void *),
 		     void *get_next_byte_argument)
 {
-  
-  error (1, 0, "command reading not yet implemented");
+	char curr_byte;
+  	while ((curr_byte = get_next_byte(get_next_byte_argument)) != EOF) 
+	{
+		if (curr_byte == '\n')
+		{
+			 
+		}
+	}
+
+
+  //error (1, 0, "command reading not yet implemented");
   return 0;
 }
 
