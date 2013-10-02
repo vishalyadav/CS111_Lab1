@@ -11,15 +11,16 @@
 /* FIXME: Define the type 'struct command_stream' here.  This should
    complete the incomplete type declaration in command.h.  */
 
-struct command_stream {
-  command_t *curr_command;
-  int index;
-  int num_commands;
-}
-
 struct individual_command {
+  char* command;
   int index;
   int size;
+}
+
+struct command_stream {
+  struct individual_command* curr_command;
+  int index;
+  int num_commands;
 }
 
 char* make_char_buffer (int (*get_next_byte) (void *), void *get_next_byte_argument) {
@@ -43,12 +44,22 @@ make_command_stream (int (*get_next_byte) (void *),
 		     void *get_next_byte_argument)
 {
 	char curr_byte;
+  command_stream_t m_command_stream;
+  int stream_index = 0;
+  m_command_stream.index = stream_index;
+  int command_index = 0;
+  struct individual_command* curr_command;
   	while ((curr_byte = get_next_byte(get_next_byte_argument)) != EOF) 
   	{
   		if (curr_byte == '\n')
   		{
-  			 
-  		}
+         curr_command->command[++command_index] = '\0';
+  			 stream_index++;
+         command_index = 0;
+  		} else {
+        curr_command->command[command_index] = curr_byte;
+        command_index++;
+      }
   	}
 
 
