@@ -175,8 +175,8 @@ make_command_stream (int (*get_next_byte) (void *),
 command_t
 read_command_stream (command_stream_t s)
 {
-  /* FIXME: Replace this with your implementation too.  */
-  s = 0;
+  char* curr_char = s -> charRoot -> x;
+  
   error (1, 0, "command reading not yet implemented");
   return 0;
 }
