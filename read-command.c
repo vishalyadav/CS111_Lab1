@@ -157,6 +157,14 @@ make_command_stream (int (*get_next_byte) (void *),
 				newCommand = 0;
 				continue;
 			}
+			if (curr_byte == '#') {
+				while((curr_byte = get_next_byte(get_next_byte_argument)) != EOF){
+					if (curr_byte == '\n') {
+						break;
+					}
+				}
+				continue;
+			}
 			curChar->next = checked_malloc(sizeof(struct char_node));
 			nextChar = curChar->next;
 			nextChar->previous = curChar;
