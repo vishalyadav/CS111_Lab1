@@ -2,8 +2,12 @@
 
 #include "command.h"
 #include "command-internals.h"
+#include "alloc.h"
 
 #include <error.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 /* FIXME: You may need to add #include directives, macro definitions,
    static function definitions, etc.  */
@@ -15,28 +19,28 @@ struct individual_command {
   char* command;
   int index;
   int size;
-}
+};
 
 struct command_stream {
   struct individual_command* curr_command;
   int index;
   int num_commands;
-}
+};
 
 struct command_node {
-	struct char_node *charRoot;
-	struct command_node *next;
-	struct command_node *previous;	
-}
+  struct char_node *charRoot;
+  struct command_node *next;
+  struct command_node *previous;	
+};
 
 struct char_node {
 	char x;
 	struct char_node *next;
 	struct char_node *previous;
-}
+};
 
 
-char* make_char_buffer (int (*get_next_byte) (void *), void *get_next_byte_argument) {
+/* char* make_char_buffer (int (*get_next_byte) (void *), void *get_next_byte_argument) {
   size_t buffer_size = 1024;
   char* char_buffer = (char *) checked_malloc(buffer_size);   //initialize buffer, with size of 1024
   char curr_byte;
@@ -50,18 +54,18 @@ char* make_char_buffer (int (*get_next_byte) (void *), void *get_next_byte_argum
     }
   }
   return char_buffer;
-}
+} */
 
 command_stream_t
 make_command_stream (int (*get_next_byte) (void *),
 		     void *get_next_byte_argument)
 {
 	char curr_byte;
-  command_stream_t m_command_stream;
-  int stream_index = 0;
-  m_command_stream.index = stream_index;
-  int command_index = 0;
-  struct individual_command* curr_command;
+//  command_stream_t m_command_stream;
+//  int stream_index = 0;
+//  m_command_stream.index = stream_index;
+//  int command_index = 0;
+//  struct individual_command* curr_command;
 
 	struct command_node *root;
  	root = checked_malloc(sizeof(struct command_node));
@@ -87,7 +91,7 @@ make_command_stream (int (*get_next_byte) (void *),
   	{
   		if (curr_byte == '\n')
   		{
-			if (newCommand = 1)
+			if (newCommand == 1)
 			{
 				continue;
 			}
@@ -147,7 +151,7 @@ make_command_stream (int (*get_next_byte) (void *),
 		}
 		else
 		{
-			if (newCommand = 1)
+			if (newCommand == 1)
 			{
 				curChar->x = curr_byte;
 				newCommand = 0;
@@ -172,6 +176,7 @@ command_t
 read_command_stream (command_stream_t s)
 {
   /* FIXME: Replace this with your implementation too.  */
+  s = 0;
   error (1, 0, "command reading not yet implemented");
   return 0;
 }
