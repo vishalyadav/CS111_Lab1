@@ -67,19 +67,100 @@ make_command_stream (int (*get_next_byte) (void *),
  	root = checked_malloc(sizeof(struct command_node));
 	root->next = 0;
 	root->previous = 0; 
-
+	struct command_node *curNode = root;
+	int parenCount = 0;
+	char oneByte = get_next_byte(get_next_byte_argument);
+	if (oneByte == '(')
+	{
+		parenCount++;
+	}
+	curNode->charRoot = checked_malloc(sizeof(struct char_node));
+	struct char_node *curChar = curNode->charRoot;
+	curChar->previous = 0;
+	curChar->next = 0;
+	struct char_node *nextChar = 0;
+	struct command_node *nextNode = 0;
+	curChar->x = oneByte;
+	int newCommand = 0;
 
   	while ((curr_byte = get_next_byte(get_next_byte_argument)) != EOF) 
   	{
   		if (curr_byte == '\n')
   		{
-         curr_command->command[++command_index] = '\0';
-  			 stream_index++;
-         command_index = 0;
-  		} else {
-        curr_command->command[command_index] = curr_byte;
-        command_index++;
-      }
+			if (newCommand = 1)
+			{
+				continue;
+			}
+			if (parenCount > 0)
+			{
+                        	curChar->next = checked_malloc(sizeof(struct char_node));
+                        	nextChar = curChar->next;
+                        	nextChar->previous = curChar;
+                        	nextChar->next = 0;
+				nextChar->x = curr_byte;
+                        	curChar = nextChar;
+                        	nextChar = 0;
+			}
+			else
+			{
+				curNode->next = checked_malloc(sizeof(struct command_node));
+				nextNode = curNode->next;
+				nextNode->previous = curNode;
+				nextNode->next = 0;
+				curNode = nextNode;
+				nextNode = 0;
+				curNode->charRoot = checked_malloc(sizeof(struct char_node));
+				curChar = curNode->charRoot;
+				curChar->previous = 0;
+				curChar->next = 0;
+				nextChar = 0;
+				newCommand = 1;
+			}
+		}
+		//else if (curr_byte == '(')
+		//{
+		//	
+		//}
+		else if (curr_byte == ')')
+		{
+                        curChar->next = checked_malloc(sizeof(struct char_node));
+                        nextChar = curChar->next;
+                        nextChar->previous = curChar;
+                        nextChar->next = 0;
+                        nextChar->x = curr_byte;
+                        curChar = nextChar;
+                        nextChar = 0;
+                        
+			curNode->next = checked_malloc(sizeof(struct command_node));
+			nextNode = curNode->next;
+			nextNode->previous = curNode;
+			nextNode->next = 0;
+			curNode = nextNode;
+			nextNode = 0;
+			curNode->charRoot = checked_malloc(sizeof(struct char_node));
+			curChar = curNode->charRoot;
+			curChar->previous = 0;
+			curChar->next = 0;
+			nextChar = 0;
+			newCommand = 1;
+	
+		}
+		else
+		{
+			if (newCommand = 1)
+			{
+				curChar->x = curr_byte;
+				newCommand = 0;
+				continue;
+			}
+			curChar->next = checked_malloc(sizeof(struct char_node));
+			nextChar = curChar->next;
+			nextChar->previous = curChar;
+			nextChar->next = 0;
+			nextChar->x = curr_byte;
+			curChar = nextChar;
+			nextChar = 0;
+		}
   	}
 
 
