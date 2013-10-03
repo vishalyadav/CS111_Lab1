@@ -21,13 +21,13 @@ struct individual_command {
   int size;
 };
 
-struct command_stream {
+/*struct command_stream {
   struct individual_command* curr_command;
   int index;
   int num_commands;
-};
+}; */
 
-struct command_node {
+struct command_stream {
   struct char_node *charRoot;
   struct command_node *next;
   struct command_node *previous;	
@@ -67,11 +67,11 @@ make_command_stream (int (*get_next_byte) (void *),
 //  int command_index = 0;
 //  struct individual_command* curr_command;
 
-	struct command_node *root;
- 	root = checked_malloc(sizeof(struct command_node));
+	struct command_stream *root;
+ 	root = checked_malloc(sizeof(struct command_stream));
 	root->next = 0;
 	root->previous = 0; 
-	struct command_node *curNode = root;
+	struct command_stream *curNode = root;
 	int parenCount = 0;
 	char oneByte = get_next_byte(get_next_byte_argument);
 	if (oneByte == '(')
@@ -83,7 +83,7 @@ make_command_stream (int (*get_next_byte) (void *),
 	curChar->previous = 0;
 	curChar->next = 0;
 	struct char_node *nextChar = 0;
-	struct command_node *nextNode = 0;
+	struct command_stream *nextNode = 0;
 	curChar->x = oneByte;
 	int newCommand = 0;
 
@@ -107,7 +107,7 @@ make_command_stream (int (*get_next_byte) (void *),
 			}
 			else
 			{
-				curNode->next = checked_malloc(sizeof(struct command_node));
+				curNode->next = checked_malloc(sizeof(struct command_stream));
 				nextNode = curNode->next;
 				nextNode->previous = curNode;
 				nextNode->next = 0;
@@ -135,7 +135,7 @@ make_command_stream (int (*get_next_byte) (void *),
                         curChar = nextChar;
                         nextChar = 0;
                         
-			curNode->next = checked_malloc(sizeof(struct command_node));
+			curNode->next = checked_malloc(sizeof(struct command_stream));
 			nextNode = curNode->next;
 			nextNode->previous = curNode;
 			nextNode->next = 0;
@@ -169,7 +169,7 @@ make_command_stream (int (*get_next_byte) (void *),
 
 
   //error (1, 0, "command reading not yet implemented");
-  return 0;
+  return root;
 }
 
 command_t
