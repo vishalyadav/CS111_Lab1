@@ -86,6 +86,7 @@ make_command_stream (int (*get_next_byte) (void *),
 	struct command_stream *nextNode = 0;
 	curChar->x = oneByte;
 	int newCommand = 0;
+	bool can_comment = true;
 
   	while ((curr_byte = get_next_byte(get_next_byte_argument)) != EOF) 
   	{
@@ -119,6 +120,7 @@ make_command_stream (int (*get_next_byte) (void *),
 				curChar->next = 0;
 				nextChar = 0;
 				newCommand = 1;
+				can_comment = true;
 			}
 		}
 		//else if (curr_byte == '(')
@@ -147,7 +149,8 @@ make_command_stream (int (*get_next_byte) (void *),
 			curChar->next = 0;
 			nextChar = 0;
 			newCommand = 1;
-	
+			
+			can_comment = true;
 		}
 		else
 		{
@@ -155,6 +158,7 @@ make_command_stream (int (*get_next_byte) (void *),
 			{
 				curChar->x = curr_byte;
 				newCommand = 0;
+				can_comment = true;
 				continue;
 			}
 			if (curr_byte == '#') {
@@ -165,6 +169,42 @@ make_command_stream (int (*get_next_byte) (void *),
 				}
 				continue;
 			}
+			if (curr_byte == '&') {
+				can_comment = false;
+				curr_byte = get_next_byte(get_next_byte_argument);
+				if(curr_byte != EOF) {
+					if(curr_byte == '&') {
+						can_comment = true;
+						//cannot newline
+					} else {
+						//error, we don't support single &
+					}
+					curChar->next = checked_malloc(sizeof(struct char_node));
+		                        nextChar = curChar->next;
+		                        nextChar->previous = curChar;
+		                        nextChar->next = 0;
+		                        nextChar->x = curr_byte;
+		                        curChar = nextChar;
+		                        nextChar = 0;
+
+		                        curNode->next = checked_malloc(sizeof(struct command_stream));
+		                        nextNode = curNode->next;
+		                        nextNode->previous = curNode;
+		                        nextNode->next = 0;
+		                        curNode = nextNode;
+		                        nextNode = 0;
+		                        curNode->charRoot = checked_malloc(sizeof(struct char_node));
+		                        curChar = curNode->charRoot;
+ 	 	            		curChar->previous = 0;
+	                	        curChar->next = 0;
+	        	                nextChar = 0;
+		                        newCommand = 1;
+
+				}
+				else {
+					//some sort of error, can't have just one &
+				}
+			}
 			curChar->next = checked_malloc(sizeof(struct char_node));
 			nextChar = curChar->next;
 			nextChar->previous = curChar;
@@ -172,6 +212,7 @@ make_command_stream (int (*get_next_byte) (void *),
 			nextChar->x = curr_byte;
 			curChar = nextChar;
 			nextChar = 0;
+			can_comment = false;
 		}
   	}
 
