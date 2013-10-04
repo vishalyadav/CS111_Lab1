@@ -224,8 +224,51 @@ make_command_stream (int (*get_next_byte) (void *),
 command_t
 read_command_stream (command_stream_t s)
 {
-  char* curr_char = s -> charRoot -> x;
-  
-  error (1, 0, "command reading not yet implemented");
-  return 0;
+	char* curr_char = s -> charRoot -> x;
+	struct char_node *curCharNode = s->charRoot;
+	while (s != 0)
+	{
+		while (curCharNode != 0)
+		{
+			switch (curCharNode->x)
+			{
+				case '(':
+				{
+					while (curCharNode->x != ')')
+					{
+						
+					}	
+				}
+				case '<':
+				{
+					
+				}
+				case '>':
+				{
+					
+				}
+				case '|':
+				{
+					
+				}
+				case '&':
+				{
+					
+				}
+				case ';':
+				{
+					
+				}
+				default:
+				{
+					
+				}
+			}
+		}
+	}
+
+
+
+	error (1, 0, "command reading not yet implemented");
+	return 0;
 }
